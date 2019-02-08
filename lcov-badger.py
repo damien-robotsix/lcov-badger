@@ -59,7 +59,7 @@ def extract_coverage(data):
     lines = data.split("\n")
     lines_found = float(next(line[3:] for line in lines if line.startswith("LF:")))
     lines_exec = float(next(line[3:] for line in lines if line.startswith("LH:")))
-    return int(lines_exec / lines_found * 100)
+    return int(round(lines_exec / lines_found * 100))
 
 if (len(sys.argv) != 3):
     print(USAGE)
