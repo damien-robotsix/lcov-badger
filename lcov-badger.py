@@ -1,3 +1,4 @@
+
 """
 Generates a shields.io-like code coverage SVG badge from lcov .info files.
 Accepts a path to .info file and destination path (including filename) to output SVG.
@@ -5,6 +6,7 @@ Accepts a path to .info file and destination path (including filename) to output
 MIT License
 
 Copyright (c) 2019 Vilkov Adel
+Copyright (c) 2024 Damien Six (file with multiple tests)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,7 +27,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import io
 import sys
 
 USAGE = "Usage: python lcov-badger.py (path-to-info-file) (path-for-output-svg)"
@@ -57,8 +58,10 @@ def create_svg(percent):
 
 def extract_coverage(data):
     lines = data.split("\n")
-    lines_found = float(next(line[3:] for line in lines if line.startswith("LF:")))
-    lines_exec = float(next(line[3:] for line in lines if line.startswith("LH:")))
+    lines_found = sum(float(line[3:]) for line in lines if line.startswith("LF:"))
+    lines_exec = sum(float(line[3:]) for line in lines if line.startswith("LH:"))
+    if lines_found == 0:
+        return 0
     return int(round(lines_exec / lines_found * 100))
 
 if (len(sys.argv) != 3):
